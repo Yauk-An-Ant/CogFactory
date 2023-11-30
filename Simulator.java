@@ -22,40 +22,15 @@ public class Simulator {
 
     public void run() {
 
-        
         PriorityQueue<Integer> numbers = new PriorityQueue<Integer>();
-        while(!cogOrders.isEmpty()) {
-            numbers.add(cogOrders.poll());
-        }
-        /* 
-        PriorityQueue<Worker> priorityWorkers = new PriorityQueue<Worker>();
-        for(Worker w : workers) {
-            priorityWorkers.add(w);
-        }
-        */
-        
-
-        /*
-        for (Worker w : workers){
-            if(!cogOrders.isEmpty())
-                w.assignOrder(numbers.poll());
-        }
-        */
-
-        /* 
-        while(!priorityWorkers.isEmpty() && !numbers.isEmpty()) {
-            if(!priorityWorkers.peek().isBusy())
-                priorityWorkers.poll().assignOrder(numbers.poll());
-        }
-        */
-
-        
         
         int hours = 0;
         
         PriorityQueue<Worker> priorityWorkers = new PriorityQueue<Worker>();
         for(Worker w : workers) {
             priorityWorkers.add(w);
+            if(!cogOrders.isEmpty())
+                numbers.add(cogOrders.poll());
         }
 
         while(!priorityWorkers.isEmpty()) {
@@ -67,8 +42,11 @@ public class Simulator {
 
             for (Worker w : workers) {
                 w.workOneHour();
-                if (!w.isBusy())
+                if (!w.isBusy()) {
                     priorityWorkers.add(w);
+                    if(!cogOrders.isEmpty())
+                        numbers.add(cogOrders.poll());
+                }
             }
         
             while(!priorityWorkers.isEmpty()){
@@ -104,7 +82,7 @@ public class Simulator {
  public static void main(String[] args) {
         ArrayList<Worker> workers = new ArrayList<Worker>();
         workers.add(new Worker("A", 30));
-        workers.add(new Worker("B", 25));
+        workers.add(new Worker("B", 45));
         ArrayList<Integer> cogs = new ArrayList<Integer>();
         cogs.add(1000);
         cogs.add(1000);
