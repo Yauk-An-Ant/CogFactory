@@ -49,9 +49,9 @@ public class Worker implements Comparable<Worker>{
         if(cph == o.getCph())
             return 0;
         else if(cph < o.getCph())
-            return -1;
-        else
             return 1;
+        else
+            return -1;
     }
 
 }

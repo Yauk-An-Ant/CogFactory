@@ -106,11 +106,11 @@ public class Simulator {
         workers.add(new Worker("A", 30));
         workers.add(new Worker("B", 25));
         ArrayList<Integer> cogs = new ArrayList<Integer>();
-        cogs.add(800);
-        cogs.add(60);
-        cogs.add(80);
-        cogs.add(5);
-        cogs.add(45);
+        cogs.add(1000);
+        cogs.add(1000);
+        cogs.add(1000);
+        cogs.add(1000);
+        cogs.add(1000);
         Simulator fs = new Simulator(workers, cogs);
         fs.run();
     }
