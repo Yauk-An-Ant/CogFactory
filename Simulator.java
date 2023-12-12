@@ -9,12 +9,18 @@ public class Simulator {
 
     private int fulltotalcogs = 0;
     private int fulltotalwaste = 0;
+    private int fullhours = 0;
+    private double fullratio = 0;
 
     public int getFullCogs() { return fulltotalcogs;}
     public int getFullWaste() { return fulltotalwaste;}
+    public int getFullHours() { return fullhours;}
+    public double getFullRatio() { return fullratio;}
     public void resetFulls() {
         fulltotalcogs = 0;
         fulltotalwaste = 0;
+        fullhours = 0;
+        fullratio = 0;
     }
 
     public Simulator(ArrayList<Worker> workers, ArrayList<Integer> cogs) {
@@ -70,6 +76,7 @@ public class Simulator {
 
             int totalcogs = 0;
             int totalwaste = 0;
+            double ratio = 0.0;
             //print relevant details
             if(log)
                 System.out.println("Hours: " + hours);
@@ -83,6 +90,7 @@ public class Simulator {
 
                 totalcogs += workers.get(i).getTotalCogsProduced();
                 totalwaste += workers.get(i).getTotalWaste();
+                ratio = (double)totalcogs/totalwaste;
             }
 
             if(log) {
@@ -94,6 +102,8 @@ public class Simulator {
            
             fulltotalcogs += totalcogs;
             fulltotalwaste += totalwaste;
+            fullhours += hours;
+            fullratio += ratio;
     }
 
     public void runBase() {
@@ -126,6 +136,7 @@ public class Simulator {
         
         int totalcogs = 0;
         int totalwaste = 0;
+        double ratio = 0.0;
         //print relevant details
         if(log)
             System.out.println("Hours: " + hours);
@@ -139,6 +150,7 @@ public class Simulator {
 
             totalcogs += workers.get(i).getTotalCogsProduced();
             totalwaste += workers.get(i).getTotalWaste();
+            ratio = (double)totalcogs/totalwaste;
         }
 
         if(log) {
@@ -150,6 +162,8 @@ public class Simulator {
            
         fulltotalcogs += totalcogs;
         fulltotalwaste += totalwaste;
+        fullhours += hours;
+        fullratio += ratio;
     }
 
     public boolean allDone() {

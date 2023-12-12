@@ -22,10 +22,14 @@ public class Main {
 
         int fullcogs = Math.abs(fs.getFullCogs());
         int fullwaste = Math.abs(fs.getFullWaste());
+        int fullhours = Math.abs(fs.getFullHours());
+        double fullratio = Math.abs(fs.getFullRatio());
         System.out.println("\nTotal Cogs Produced by all Workers: " + fullcogs);
         System.out.println("Total Waste from all Workers: " + fullwaste);
         System.out.println("Average Cogs Produced Per Worker: " + fullcogs / 6000.0);
         System.out.println("Average Waste Per Worker: " + fullwaste / 6000.0);
+        System.out.println("Average Hours Elapsed: " + fullhours/1000);
+        System.out.println("Average Cogs Produced to Waste Ratio: " + fullratio / 6000);
 
         fs.resetFulls();
         //baseline
@@ -35,10 +39,14 @@ public class Main {
 
         fullcogs = Math.abs(fs.getFullCogs());
         fullwaste = Math.abs(fs.getFullWaste());
+        fullhours = Math.abs(fs.getFullHours());
+        fullratio = Math.abs(fs.getFullRatio());
         System.out.println("\nTotal Cogs Produced by all Workers: " + fullcogs);
         System.out.println("Total Waste from all Workers: " + fullwaste);
         System.out.println("Average Cogs Produced Per Worker: " + fullcogs / 6000.0);
         System.out.println("Average Waste Per Worker: " + fullwaste / 6000.0);
+        System.out.println("Average Hours Elapsed: " + fullhours/1000);
+        System.out.println("Average Cogs Produced to Waste Ratio: " + fullratio / 6000);
 
     }
 }
