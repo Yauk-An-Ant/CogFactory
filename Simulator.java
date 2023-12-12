@@ -5,7 +5,10 @@ public class Simulator {
     ArrayList<Worker> workers;
     Queue<Integer> cogOrders;
     ArrayList<Integer> cogList;
-    private boolean log = true;
+    private boolean log = false;
+
+    private int fulltotalcogs = 0;
+    private int fulltotalwaste = 0;
 
     public Simulator(ArrayList<Worker> workers, ArrayList<Integer> cogs) {
         this.workers = workers;
@@ -58,6 +61,8 @@ public class Simulator {
         }
 
         if(log) {
+            int totalcogs = 0;
+            int totalwaste = 0;
             //print relevant details
             System.out.println("Hours: " + hours);
             for(int i = 0; i < workers.size(); i++) {
@@ -65,7 +70,67 @@ public class Simulator {
                 System.out.println("CPH: " + workers.get(i).getCph());
                 System.out.println("Total Cogs Produced: " + workers.get(i).getTotalCogsProduced());
                 System.out.println("Total Waste: " + workers.get(i).getTotalWaste());
+
+                totalcogs += workers.get(i).getTotalCogsProduced();
+                totalwaste += workers.get(i).getTotalWaste();
             }
+
+            System.out.println("\nTotal Cogs Produced by all Workers: " + totalcogs);
+            System.out.println("Total Waste from all Workers: " + totalwaste);
+            System.out.println("Average Cogs Produced Per Worker: " + totalcogs / 6.0);
+            System.out.println("Average Waste Per Worker: " + totalwaste / 6.0);
+
+            fulltotalcogs += totalcogs;
+            fulltotalwaste += totalwaste;
+        }
+    }
+
+    public void runBase() {
+        for (Worker w : workers){
+            if(!cogOrders.isEmpty())
+                w.assignOrder(cogOrders.poll());
+        }
+        
+        int hours = 0;
+        
+        Queue<Worker> q = new LinkedList<>();
+        
+        while (! (cogOrders.isEmpty() && allDone()) ) {
+        
+            hours++;
+            for (Worker w: workers) {
+                w.workOneHour();
+                if (!w.isBusy())
+                    q.add(w);
+            }
+        
+            while(!q.isEmpty()){
+                Worker w = q.poll();
+                if (!cogOrders.isEmpty())
+                    w.assignOrder(cogOrders.poll());
+            }
+            
+        }
+        
+        if(log) {
+            int totalcogs = 0;
+            int totalwaste = 0;
+            //print relevant details
+            System.out.println("Hours: " + hours);
+            for(int i = 0; i < workers.size(); i++) {
+                System.out.println("Name: " + workers.get(i).getName());
+                System.out.println("CPH: " + workers.get(i).getCph());
+                System.out.println("Total Cogs Produced: " + workers.get(i).getTotalCogsProduced());
+                System.out.println("Total Waste: " + workers.get(i).getTotalWaste());
+
+                totalcogs += workers.get(i).getTotalCogsProduced();
+                totalwaste += workers.get(i).getTotalWaste();
+            }
+
+            System.out.println("\nTotal Cogs Produced by all Workers: " + totalcogs);
+            System.out.println("Total Waste from all Workers: " + totalwaste);
+            System.out.println("Average Cogs Produced Per Worker: " + totalcogs / 6.0);
+            System.out.println("Average Waste Per Worker: " + totalwaste / 6.0);
         }
     }
 
@@ -81,15 +146,44 @@ public class Simulator {
 
  public static void main(String[] args) {
         ArrayList<Worker> workers = new ArrayList<Worker>();
-        workers.add(new Worker("A", 30));
-        workers.add(new Worker("B", 45));
+        
+        for(int i = 0; i < 6; i++) {
+            workers.add(new Worker("" + i, (int)(Math.random() * 40 + 15)));
+        }
+
         ArrayList<Integer> cogs = new ArrayList<Integer>();
-        cogs.add(1000);
-        cogs.add(1000);
-        cogs.add(1000);
-        cogs.add(1000);
-        cogs.add(1000);
+        
+        for(int i = 0; i < 100; i++) {
+            cogs.add((int)(Math.random() * 80 + 20));
+        }
+
         Simulator fs = new Simulator(workers, cogs);
-        fs.run();
-    }
+
+        Scanner scanner = new Scanner(System.in);
+
+        boolean running = true;
+
+        while(running) {
+            System.out.println("Which algorithm would you like to run? \nBaseline \nImproved");
+            String answer = scanner.nextLine();
+        
+            if(answer.toLowerCase().equals("improved")) {
+                for(int i = 0; i < 1000; i++) {
+                    fs.run();
+                }
+                System.out.println("\nTotal Cogs Produced by all Workers: " + fulltotalcogs);
+                System.out.println("Total Waste from all Workers: " + fulltotalwaste);
+                System.out.println("Average Cogs Produced Per Worker: " + fulltotalcogs / 6000.0);
+                System.out.println("Average Waste Per Worker: " + fulltotalwaste / 6000.0);
+                running = false;
+            } else if(answer.toLowerCase().equals("baseline")) {
+                fs.runBase();
+                running = false;
+            } else
+                System.out.println("That is not one of the algorithms");
+
+        }
+
+        scanner.close();
+    }    
 }
