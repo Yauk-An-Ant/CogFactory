@@ -10,6 +10,13 @@ public class Simulator {
     private int fulltotalcogs = 0;
     private int fulltotalwaste = 0;
 
+    public int getFullCogs() { return fulltotalcogs;}
+    public int getFullWaste() { return fulltotalwaste;}
+    public void resetFulls() {
+        fulltotalcogs = 0;
+        fulltotalwaste = 0;
+    }
+
     public Simulator(ArrayList<Worker> workers, ArrayList<Integer> cogs) {
         this.workers = workers;
         this.cogList = cogs;
@@ -24,6 +31,7 @@ public class Simulator {
     }
 
     public void run() {
+        resetQueue();
 
         PriorityQueue<Integer> numbers = new PriorityQueue<Integer>();
         
@@ -60,32 +68,36 @@ public class Simulator {
             
         }
 
-        if(log) {
             int totalcogs = 0;
             int totalwaste = 0;
             //print relevant details
-            System.out.println("Hours: " + hours);
+            if(log)
+                System.out.println("Hours: " + hours);
             for(int i = 0; i < workers.size(); i++) {
-                System.out.println("Name: " + workers.get(i).getName());
-                System.out.println("CPH: " + workers.get(i).getCph());
-                System.out.println("Total Cogs Produced: " + workers.get(i).getTotalCogsProduced());
-                System.out.println("Total Waste: " + workers.get(i).getTotalWaste());
+                if(log) {
+                    System.out.println("Name: " + workers.get(i).getName());
+                    System.out.println("CPH: " + workers.get(i).getCph());
+                    System.out.println("Total Cogs Produced: " + workers.get(i).getTotalCogsProduced());
+                    System.out.println("Total Waste: " + workers.get(i).getTotalWaste());
+                }
 
                 totalcogs += workers.get(i).getTotalCogsProduced();
                 totalwaste += workers.get(i).getTotalWaste();
             }
 
-            System.out.println("\nTotal Cogs Produced by all Workers: " + totalcogs);
-            System.out.println("Total Waste from all Workers: " + totalwaste);
-            System.out.println("Average Cogs Produced Per Worker: " + totalcogs / 6.0);
-            System.out.println("Average Waste Per Worker: " + totalwaste / 6.0);
-
+            if(log) {
+                System.out.println("\nTotal Cogs Produced by all Workers: " + totalcogs);
+                System.out.println("Total Waste from all Workers: " + totalwaste);
+                System.out.println("Average Cogs Produced Per Worker: " + totalcogs / 6.0);
+                System.out.println("Average Waste Per Worker: " + totalwaste / 6.0);
+            }
+           
             fulltotalcogs += totalcogs;
             fulltotalwaste += totalwaste;
-        }
     }
 
     public void runBase() {
+        resetQueue();
         for (Worker w : workers){
             if(!cogOrders.isEmpty())
                 w.assignOrder(cogOrders.poll());
@@ -112,26 +124,32 @@ public class Simulator {
             
         }
         
-        if(log) {
-            int totalcogs = 0;
-            int totalwaste = 0;
-            //print relevant details
+        int totalcogs = 0;
+        int totalwaste = 0;
+        //print relevant details
+        if(log)
             System.out.println("Hours: " + hours);
-            for(int i = 0; i < workers.size(); i++) {
+        for(int i = 0; i < workers.size(); i++) {
+            if(log) {
                 System.out.println("Name: " + workers.get(i).getName());
                 System.out.println("CPH: " + workers.get(i).getCph());
                 System.out.println("Total Cogs Produced: " + workers.get(i).getTotalCogsProduced());
                 System.out.println("Total Waste: " + workers.get(i).getTotalWaste());
-
-                totalcogs += workers.get(i).getTotalCogsProduced();
-                totalwaste += workers.get(i).getTotalWaste();
             }
 
+            totalcogs += workers.get(i).getTotalCogsProduced();
+            totalwaste += workers.get(i).getTotalWaste();
+        }
+
+        if(log) {
             System.out.println("\nTotal Cogs Produced by all Workers: " + totalcogs);
             System.out.println("Total Waste from all Workers: " + totalwaste);
             System.out.println("Average Cogs Produced Per Worker: " + totalcogs / 6.0);
             System.out.println("Average Waste Per Worker: " + totalwaste / 6.0);
         }
+           
+        fulltotalcogs += totalcogs;
+        fulltotalwaste += totalwaste;
     }
 
     public boolean allDone() {
@@ -142,48 +160,5 @@ public class Simulator {
         }
         
         return done;
-    }
-
- public static void main(String[] args) {
-        ArrayList<Worker> workers = new ArrayList<Worker>();
-        
-        for(int i = 0; i < 6; i++) {
-            workers.add(new Worker("" + i, (int)(Math.random() * 40 + 15)));
-        }
-
-        ArrayList<Integer> cogs = new ArrayList<Integer>();
-        
-        for(int i = 0; i < 100; i++) {
-            cogs.add((int)(Math.random() * 80 + 20));
-        }
-
-        Simulator fs = new Simulator(workers, cogs);
-
-        Scanner scanner = new Scanner(System.in);
-
-        boolean running = true;
-
-        while(running) {
-            System.out.println("Which algorithm would you like to run? \nBaseline \nImproved");
-            String answer = scanner.nextLine();
-        
-            if(answer.toLowerCase().equals("improved")) {
-                for(int i = 0; i < 1000; i++) {
-                    fs.run();
-                }
-                System.out.println("\nTotal Cogs Produced by all Workers: " + fulltotalcogs);
-                System.out.println("Total Waste from all Workers: " + fulltotalwaste);
-                System.out.println("Average Cogs Produced Per Worker: " + fulltotalcogs / 6000.0);
-                System.out.println("Average Waste Per Worker: " + fulltotalwaste / 6000.0);
-                running = false;
-            } else if(answer.toLowerCase().equals("baseline")) {
-                fs.runBase();
-                running = false;
-            } else
-                System.out.println("That is not one of the algorithms");
-
-        }
-
-        scanner.close();
-    }    
+    } 
 }
